@@ -1,0 +1,3 @@
+bison -d converter.y
+lex converter.l
+gcc lex.yy.c converter.tab.c -ll -lm -w
