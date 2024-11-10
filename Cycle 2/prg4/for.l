@@ -1,18 +1,19 @@
-alpha [A-Za-z]
-digit [0-9]
+%{ 
+#include "for.tab.h"
+%} 
+ 
+%% 
+for return FOR; 
+[\(\)] return PARANTHESIS; 
+[a-zA-Z0-9]* return OPERAND; 
+"="|"<"|">"|">="|"<="|"=="|"++"|"--" return OPERATOR; 
+\; return SEMICOLON; 
+, return COMMA; 
+\n return NEWLINE; 
+[ \t]+           ;               // Ignore whitespace
+. ; 
+%% 
 
-%%
-
-[\t \n]
-for             return FOR;
-{digit}+    return NUM;
-{alpha}({alpha}|{digit})* return ID;
-"<="         return LE;
-">="         return GE;
-"=="         return EQ;
-"!="          return NE;
-"||"            return OR;
-"&&"         return AND;
-.                return yytext[0];
-
-%%
+int yywrap(){
+    return 1;
+}

@@ -1,70 +1,44 @@
-/*yaac for loop*/
+/* Yacc for parsing a for loop */
 
-%{
-#include <stdio.h>
-#include <stdlib.h>
-%}
+%{ 
+#include <stdio.h> 
+int valid = 1; 
+ 
+%} 
 
-%token ID NUM FOR LE GE EQ NE OR AND
+ 
+ 
+
+ 
+%token FOR PARANTHESIS OPERAND OPERATOR COMMA SEMICOLON NEWLINE 
+ 
+%% 
+start: FOR PARANTHESIS A A B PARANTHESIS NEWLINE; 
+
+A: OPERAND OPERATOR OPERAND SEMICOLON 
+| OPERAND OPERATOR OPERAND COMMA A 
+| SEMICOLON
+; 
 
 
-%right "="
-%left OR AND
-%left '>' '<' LE GE EQ NE
-%left '+' '-'
-%left '*' '/'
-%right UMINUS
-%left '!'
+B: OPERAND OPERATOR 
+| OPERAND OPERATOR COMMA B 
+|; 
 
 %%
-   
-S         : ST {printf("Input accepted\n"); exit(0);}
-ST       : FOR '(' E ';' E2 ';' E ')' DEF
-           ;
-DEF    : '{' BODY '}'
-           | E';'
-           | ST
-           |
-           ;
-BODY  : BODY BODY
-           | E ';'       
-           | ST
-           |            
-           ;
-       
-E        : ID '=' E
-          | E '+' E
-          | E '-' E
-          | E '*' E
-          | E '/' E
-          | E '<' E
-          | E '>' E
-          | E LE E
-          | E GE E
-          | E EQ E
-          | E NE E
-          | E OR E
-          | E AND E
-          | E '+' '+'
-          | E '-' '-'
-          | ID 
-          | NUM
-          ;
 
-   
-E2     : E'<'E
-         | E'>'E
-         | E LE E
-         | E GE E
-         | E EQ E
-         | E NE E
-         | E OR E
-         | E AND E
-         ;   
-%%
-
-#include "lex.yy.c"
-main() {
-    printf("Enter the expression:\n");
-    yyparse();
-}     
+int yyerror() { 
+    valid = 0; 
+    printf("Invalid.\n"); 
+    return 1; 
+} 
+ 
+void main() { 
+    printf("Enter string:\n"); 
+    yyparse(); 
+ 
+    if (valid) {
+        printf("Valid.\n"); 
+    }
+        
+} 
